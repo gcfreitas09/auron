@@ -22,11 +22,18 @@
   --orb-pulse-opacity: 1;
   --orb-core-filter: none;
   position: relative;
-  width: min(66vw, 360px);
-  aspect-ratio: 1;
+  width: clamp(220px, min(50vw, 42vh), 360px);
+  min-width: 220px;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
   animation: orbFloat var(--orb-float-duration) ease-in-out infinite;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .orb-halo,
@@ -36,6 +43,7 @@
 .orb-core__pulse {
   position: absolute;
   border-radius: 50%;
+  aspect-ratio: 1 / 1;
 }
 
 .orb-halo--outer {
@@ -376,6 +384,7 @@
 
 @media (max-width: 640px) {
   .orb-scene {
-    width: min(78vw, 320px);
+    width: clamp(210px, min(76vw, 36vh), 320px);
+    min-width: 210px;
   }
 }

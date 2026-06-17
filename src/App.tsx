@@ -3,8 +3,8 @@ import CommandInput from "./components/CommandInput";
 import FloatingPanel from "./components/FloatingPanel";
 import Orb from "./components/Orb";
 import SystemHeader from "./components/SystemHeader";
-import { auronStates, type AuronState } from "./types/auron";
 import { routeCommand } from "./core/commandRouter";
+import { auronStates, type AuronState } from "./types/auron";
 
 const helpCommands = [
   "estado idle",
@@ -40,7 +40,7 @@ function App() {
         setResponseMessage(result.message);
         setShowHelp(false);
         return;
-      case "show-help":
+      case "show_help":
         setShowHelp(true);
         setResponseMessage(result.message);
         return;
@@ -74,50 +74,67 @@ function App() {
 
       <section className="auron-stage" aria-label="AURON interface">
         <SystemHeader />
-        <Orb state={state} />
 
-        <div className="auron-command-stack">
-          <CommandInput onSubmit={handleCommand} />
-
-          <div className="auron-response" role="status" aria-live="polite">
-            <span className="auron-response__label">AURON</span>
-            <p>{responseMessage}</p>
-          </div>
-
-          {showHelp ? (
-            <FloatingPanel title="COMMAND INDEX">
-              <ul className="command-list">
-                {helpCommands.map((command) => (
-                  <li key={command}>{command}</li>
-                ))}
-              </ul>
-            </FloatingPanel>
-          ) : null}
-
-          {showMap ? (
-            <FloatingPanel title="MAP MODULE" tone="accent">
-              <p>Map system reserved for next stage.</p>
-            </FloatingPanel>
-          ) : null}
+        <div className="auron-orb-zone">
+          <Orb state={state} />
         </div>
 
-        <div className="auron-status-panel">
-          <div className="auron-status-line">
-            <span className="auron-status-line__label">Status</span>
-            <strong>{state.toUpperCase()}</strong>
+        <div className="auron-control-deck">
+          <CommandInput onSubmit={handleCommand} />
+
+          <FloatingPanel
+            title="AURON RESPONSE"
+            variant="subtle"
+            className="auron-response-panel"
+          >
+            <div className="auron-response" role="status" aria-live="polite">
+              <p>{responseMessage}</p>
+            </div>
+          </FloatingPanel>
+
+          <div className="auron-panel-stack">
+            {showHelp ? (
+              <FloatingPanel
+                title="COMMAND INDEX"
+                onClose={() => setShowHelp(false)}
+              >
+                <ul className="command-list">
+                  {helpCommands.map((command) => (
+                    <li key={command}>{command}</li>
+                  ))}
+                </ul>
+              </FloatingPanel>
+            ) : null}
+
+            {showMap ? (
+              <FloatingPanel
+                title="MAP MODULE"
+                variant="accent"
+                onClose={() => setShowMap(false)}
+              >
+                <p>Map system reserved for next stage.</p>
+              </FloatingPanel>
+            ) : null}
           </div>
 
-          <div className="auron-state-switcher" aria-label="AURON state controls">
-            {auronStates.map((nextState) => (
-              <button
-                key={nextState}
-                type="button"
-                className={nextState === state ? "is-active" : ""}
-                onClick={() => handleStateChange(nextState)}
-              >
-                {nextState}
-              </button>
-            ))}
+          <div className="auron-status-panel">
+            <div className="auron-status-line">
+              <span className="auron-status-line__label">Status</span>
+              <strong>{state.toUpperCase()}</strong>
+            </div>
+
+            <div className="auron-state-switcher" aria-label="AURON state controls">
+              {auronStates.map((nextState) => (
+                <button
+                  key={nextState}
+                  type="button"
+                  className={nextState === state ? "is-active" : ""}
+                  onClick={() => handleStateChange(nextState)}
+                >
+                  {nextState}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>

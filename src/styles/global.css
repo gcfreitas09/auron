@@ -40,7 +40,7 @@ select {
   place-items: center;
   overflow: hidden;
   isolation: isolate;
-  padding: 24px 0;
+  padding: 24px 0 30px;
 }
 
 .app-background,
@@ -90,30 +90,56 @@ select {
 
 .auron-stage {
   width: min(92vw, 960px);
-  max-height: calc(100vh - 48px);
-  padding: 40px 24px calc(88px + env(safe-area-inset-bottom, 0px));
+  max-height: calc(100vh - 54px);
+  padding: 32px 24px calc(96px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 28px;
+  justify-content: flex-start;
+  gap: 18px;
   text-align: center;
   overflow: hidden;
 }
 
-.auron-command-stack {
-  width: min(100%, 520px);
-  max-height: min(42vh, 360px);
+.auron-orb-zone {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.auron-control-deck {
+  width: min(760px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0 auto;
+  padding-bottom: 32px;
+}
+
+.auron-panel-stack {
+  width: 100%;
+  max-height: min(34vh, 320px);
   display: flex;
   flex-direction: column;
   gap: 12px;
   align-items: stretch;
-  flex-shrink: 1;
   min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  flex: 0 0 auto;
 }
 
 .command-input {
   width: 100%;
+  flex: 0 0 auto;
 }
 
 .command-input input {
@@ -147,22 +173,12 @@ select {
   transform: translateY(-1px);
 }
 
-.auron-response {
-  padding: 10px 14px 12px;
-  border: 1px solid rgba(112, 146, 236, 0.14);
-  border-radius: 16px;
-  background: rgba(8, 14, 30, 0.56);
-  text-align: left;
-  backdrop-filter: blur(16px);
+.auron-response-panel {
+  flex: 0 0 auto;
 }
 
-.auron-response__label {
-  display: inline-block;
-  margin-bottom: 5px;
-  font-size: 0.63rem;
-  letter-spacing: 0.18rem;
-  text-transform: uppercase;
-  color: rgba(126, 174, 255, 0.72);
+.auron-response {
+  text-align: left;
 }
 
 .auron-response p {
@@ -172,6 +188,8 @@ select {
 }
 
 .floating-panel {
+  width: 100%;
+  max-width: 560px;
   padding: 14px 16px 16px;
   border: 1px solid rgba(110, 141, 226, 0.18);
   border-radius: 18px;
@@ -181,7 +199,7 @@ select {
     inset 0 1px 0 rgba(195, 215, 255, 0.05);
   text-align: left;
   backdrop-filter: blur(18px);
-  max-height: min(280px, 35vh);
+  max-height: min(280px, 34vh);
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
@@ -192,13 +210,48 @@ select {
     linear-gradient(180deg, rgba(7, 18, 36, 0.82), rgba(7, 15, 26, 0.72));
 }
 
-.floating-panel__title {
-  display: inline-block;
+.floating-panel--subtle {
+  background: rgba(8, 13, 30, 0.48);
+  border-color: rgba(104, 136, 218, 0.14);
+  box-shadow:
+    0 12px 28px rgba(2, 6, 18, 0.22),
+    inset 0 1px 0 rgba(195, 215, 255, 0.04);
+}
+
+.floating-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 10px;
+}
+
+.floating-panel__title {
   font-size: 0.68rem;
   letter-spacing: 0.2rem;
   text-transform: uppercase;
   color: rgba(148, 192, 255, 0.76);
+}
+
+.floating-panel__close {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(112, 145, 229, 0.18);
+  border-radius: 999px;
+  background: rgba(18, 25, 52, 0.72);
+  color: rgba(221, 232, 255, 0.76);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.floating-panel__close:hover {
+  border-color: rgba(125, 206, 255, 0.34);
+  background: rgba(31, 43, 88, 0.84);
+  color: #f7fbff;
 }
 
 .floating-panel__body {
@@ -211,16 +264,26 @@ select {
 
 .command-list {
   margin: 0;
-  padding-left: 16px;
+  padding-left: 0;
+  list-style: none;
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
   color: rgba(228, 236, 255, 0.84);
   font-size: 0.9rem;
   line-height: 1.35;
 }
 
+.command-list li {
+  padding: 8px 10px;
+  border: 1px solid rgba(104, 131, 214, 0.12);
+  border-radius: 12px;
+  background: rgba(13, 20, 42, 0.42);
+}
+
 .auron-status-panel {
-  margin-top: 8px;
+  margin-top: 0;
+  width: 100%;
   padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
@@ -233,6 +296,7 @@ select {
     0 14px 40px rgba(2, 6, 18, 0.34),
     inset 0 1px 0 rgba(195, 215, 255, 0.06);
   backdrop-filter: blur(18px);
+  flex: 0 0 auto;
 }
 
 .auron-status-line {
@@ -299,6 +363,7 @@ select {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  flex: 0 0 auto;
 }
 
 .system-header__eyebrow {
@@ -328,8 +393,13 @@ select {
 @media (max-width: 640px) {
   .auron-stage {
     max-height: calc(100vh - 24px);
-    padding: 28px 20px calc(68px + env(safe-area-inset-bottom, 0px));
-    gap: 18px;
+    padding: 24px 20px calc(70px + env(safe-area-inset-bottom, 0px));
+    gap: 16px;
+  }
+
+  .auron-control-deck {
+    width: 100%;
+    padding-bottom: 20px;
   }
 
   .auron-status-panel {
@@ -337,13 +407,17 @@ select {
     padding-inline: 14px;
   }
 
-  .auron-command-stack {
+  .auron-panel-stack {
     width: 100%;
-    max-height: min(44vh, 320px);
+    max-height: min(30vh, 250px);
   }
 
   .floating-panel {
-    max-height: min(240px, 32vh);
+    max-height: min(220px, 28vh);
+  }
+
+  .command-list {
+    grid-template-columns: 1fr;
   }
 
   .auron-state-switcher button {

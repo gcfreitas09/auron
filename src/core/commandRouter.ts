@@ -7,7 +7,7 @@ export type CommandResult =
       message: string;
     }
   | {
-      type: "show-help";
+      type: "show_help";
       message: string;
     }
   | {
@@ -73,17 +73,17 @@ export function routeCommand(command: string): CommandResult {
     case "limpar":
       return {
         type: "clear",
-        message: "Painéis temporários limpos."
+        message: "Paineis temporarios limpos."
       };
     case "ajuda":
       return {
-        type: "show-help",
-        message: "Lista de comandos disponível."
+        type: "show_help",
+        message: "Lista de comandos disponivel."
       };
     case "abrir mapa":
       return {
         type: "open-map",
-        message: "Módulo de mapa preparado."
+        message: "Modulo de mapa preparado."
       };
     case "fechar mapa":
       return {
@@ -93,7 +93,7 @@ export function routeCommand(command: string): CommandResult {
     default:
       return {
         type: "unknown",
-        message: "Comando não reconhecido."
+        message: "Comando nao reconhecido."
       };
   }
 }
