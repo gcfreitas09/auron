@@ -2,7 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.listenForLocalVoiceCommand = listenForLocalVoiceCommand;
 const node_child_process_1 = require("node:child_process");
-const auronAliases = [
+const wakeWordAliases = [
+    "atlas",
+    "atllas",
+    "atles",
+    "atlasz",
+    "atas",
+    "atis",
+    "atlaz",
     "auron",
     "aurun",
     "auro",
@@ -39,7 +46,7 @@ const fallbackEnglishPhrases = [
 ];
 function buildPhraseGrammar() {
     const phrases = new Set([...commandPhrases, ...fallbackEnglishPhrases]);
-    for (const alias of auronAliases) {
+    for (const alias of wakeWordAliases) {
         for (const command of [...commandPhrases, ...fallbackEnglishPhrases]) {
             phrases.add(`${alias} ${command}`);
         }

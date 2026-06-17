@@ -1,8 +1,8 @@
 {
-  "name": "auron-desktop-assistant",
+  "name": "atlas-desktop-assistant",
   "version": "0.1.0",
   "private": true,
-  "description": "AURON Desktop Assistant foundation built with Electron, Vite, React, and TypeScript.",
+  "description": "ATLAS Desktop Assistant foundation built with Electron, Vite, React, and TypeScript.",
   "main": "main.js",
   "scripts": {
     "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:main\" \"npm:dev:electron\"",

@@ -1,4 +1,11 @@
-const auronAliases = [
+const wakeWordAliases = [
+  "atlas",
+  "atllas",
+  "atles",
+  "atlasz",
+  "atas",
+  "atis",
+  "atlaz",
   "auron",
   "aurun",
   "auro",
@@ -36,7 +43,7 @@ function normalizeText(value: string) {
 
 export function normalizeVoiceCommand(transcript: string) {
   const normalized = normalizeText(transcript);
-  const aliasPattern = auronAliases.join("|");
+  const aliasPattern = wakeWordAliases.join("|");
   const wakeWordPattern = new RegExp(`^(${aliasPattern})(\\b|\\s|[,.:;!?-]+)`, "i");
 
   const command = normalized

@@ -34,7 +34,7 @@ function createMainWindow() {
     minHeight: 640,
     backgroundColor: "#050816",
     autoHideMenuBar: true,
-    title: "AURON",
+    title: "ATLAS",
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

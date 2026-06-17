@@ -163,7 +163,7 @@ function App() {
         <div className="app-noise" />
       </div>
 
-      <section className="auron-stage" aria-label="AURON interface">
+      <section className="auron-stage" aria-label="ATLAS interface">
         <SystemHeader />
 
         <div className="auron-main-layout">
@@ -182,7 +182,7 @@ function App() {
             />
 
             <FloatingPanel
-              title="AURON RESPONSE"
+              title="ATLAS RESPONSE"
               variant="subtle"
               className="auron-response-panel"
             >
@@ -222,7 +222,7 @@ function App() {
                 <strong>{state.toUpperCase()}</strong>
               </div>
 
-              <div className="auron-state-switcher" aria-label="AURON state controls">
+              <div className="auron-state-switcher" aria-label="ATLAS state controls">
                 {auronStates.map((nextState) => (
                   <button
                     key={nextState}

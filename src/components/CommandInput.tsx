@@ -25,8 +25,8 @@ function CommandInput({ onSubmit }: CommandInputProps) {
         type="text"
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        placeholder="Digite um comando para o AURON..."
-        aria-label="Digite um comando para o AURON"
+        placeholder="Digite um comando para o ATLAS..."
+        aria-label="Digite um comando para o ATLAS"
         autoComplete="off"
         spellCheck={false}
       />
