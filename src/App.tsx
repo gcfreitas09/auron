@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import CommandInput from "./components/CommandInput";
-import FloatingPanel from "./components/FloatingPanel";
-import Orb from "./components/Orb";
-import SystemHeader from "./components/SystemHeader";
-import VoiceControl from "./components/VoiceControl";
+import DevMode from "./components/DevMode";
+import PresentationMode from "./components/PresentationMode";
 import { routeCommand } from "./core/commandRouter";
-import { auronStates, type AuronState } from "./types/auron";
+import type { AuronState } from "./types/auron";
 
 const helpCommands = [
   "estado idle",
@@ -20,6 +17,7 @@ const helpCommands = [
 ];
 
 function App() {
+  const [mode, setMode] = useState<"presentation" | "dev">("presentation");
   const [state, setState] = useState<AuronState>("idle");
   const [transientState, setTransientState] = useState<AuronState | null>(null);
   const [responseMessage, setResponseMessage] = useState(
@@ -163,81 +161,37 @@ function App() {
         <div className="app-noise" />
       </div>
 
-      <section className="auron-stage" aria-label="ATLAS interface">
-        <SystemHeader />
-
-        <div className="auron-main-layout">
-          <div className="auron-orb-zone">
-            <Orb state={activeOrbState} />
-          </div>
-
-          <div className="auron-control-deck">
-            <CommandInput onSubmit={handleTextCommand} />
-            <VoiceControl
-              onListeningStart={handleVoiceListeningStart}
-              onListeningEnd={handleVoiceListeningEnd}
-              onRecognized={handleVoiceRecognized}
-              onError={handleVoiceError}
-              onUnsupported={handleVoiceUnsupported}
-            />
-
-            <FloatingPanel
-              title="ATLAS RESPONSE"
-              variant="subtle"
-              className="auron-response-panel"
-            >
-              <div className="auron-response" role="status" aria-live="polite">
-                <p>{responseMessage}</p>
-              </div>
-            </FloatingPanel>
-
-            <div className="auron-panel-stack">
-              {showHelp ? (
-                <FloatingPanel
-                  title="COMMAND INDEX"
-                  onClose={() => setShowHelp(false)}
-                >
-                  <ul className="command-list">
-                    {helpCommands.map((command) => (
-                      <li key={command}>{command}</li>
-                    ))}
-                  </ul>
-                </FloatingPanel>
-              ) : null}
-
-              {showMap ? (
-                <FloatingPanel
-                  title="MAP MODULE"
-                  variant="accent"
-                  onClose={() => setShowMap(false)}
-                >
-                  <p>Map system reserved for next stage.</p>
-                </FloatingPanel>
-              ) : null}
-            </div>
-
-            <div className="auron-status-panel">
-              <div className="auron-status-line">
-                <span className="auron-status-line__label">Status</span>
-                <strong>{state.toUpperCase()}</strong>
-              </div>
-
-              <div className="auron-state-switcher" aria-label="ATLAS state controls">
-                {auronStates.map((nextState) => (
-                  <button
-                    key={nextState}
-                    type="button"
-                    className={nextState === state ? "is-active" : ""}
-                    onClick={() => handleStateChange(nextState)}
-                  >
-                    {nextState}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {mode === "presentation" ? (
+        <PresentationMode
+          state={activeOrbState}
+          responseMessage={responseMessage}
+          onOpenDev={() => setMode("dev")}
+          onListeningStart={handleVoiceListeningStart}
+          onListeningEnd={handleVoiceListeningEnd}
+          onRecognized={handleVoiceRecognized}
+          onError={handleVoiceError}
+          onUnsupported={handleVoiceUnsupported}
+        />
+      ) : (
+        <DevMode
+          state={activeOrbState}
+          selectedState={state}
+          responseMessage={responseMessage}
+          showHelp={showHelp}
+          showMap={showMap}
+          helpCommands={helpCommands}
+          onCloseDev={() => setMode("presentation")}
+          onTextCommand={handleTextCommand}
+          onListeningStart={handleVoiceListeningStart}
+          onListeningEnd={handleVoiceListeningEnd}
+          onRecognized={handleVoiceRecognized}
+          onError={handleVoiceError}
+          onUnsupported={handleVoiceUnsupported}
+          onHelpClose={() => setShowHelp(false)}
+          onMapClose={() => setShowMap(false)}
+          onStateChange={handleStateChange}
+        />
+      )}
     </main>
   );
 }

@@ -48,6 +48,8 @@ type VoiceControlProps = {
   onRecognized: (command: string, transcript: string) => void | Promise<void>;
   onError: (message: string) => void;
   onUnsupported: (message: string) => void;
+  showMeta?: boolean;
+  compact?: boolean;
 };
 
 type LocalVoiceResult =
@@ -101,7 +103,9 @@ function VoiceControl({
   onListeningEnd,
   onRecognized,
   onError,
-  onUnsupported
+  onUnsupported,
+  showMeta = true,
+  compact = false
 }: VoiceControlProps) {
   const [voiceStatus, setVoiceStatus] = useState("Pronto para ouvir.");
   const [isListening, setIsListening] = useState(false);
@@ -374,7 +378,7 @@ function VoiceControl({
   }
 
   return (
-    <div className="voice-control">
+    <div className={`voice-control${compact ? " voice-control--compact" : ""}`}>
       <button
         type="button"
         className={`voice-control__button${isListening ? " is-listening" : ""}`}
@@ -384,35 +388,37 @@ function VoiceControl({
         {isListening ? "Ouvindo..." : "Ouvir comando"}
       </button>
 
-      <div className="voice-control__meta">
-        <p className="voice-control__status">
-          {isSupported
-            ? voiceStatus
-            : environmentLabel === "Electron"
-              ? "SpeechRecognition nao esta disponivel neste Electron. Sera necessario fallback de STT em etapa futura."
-              : "Reconhecimento de voz nao disponivel neste ambiente."}
-        </p>
-
-        <p className="voice-control__environment">
-          Ambiente: {environmentLabel}
-        </p>
-
-        {lastTranscript ? (
-          <p className="voice-control__transcript">
-            Reconhecido: "{lastTranscript}"
+      {showMeta ? (
+        <div className="voice-control__meta">
+          <p className="voice-control__status">
+            {isSupported
+              ? voiceStatus
+              : environmentLabel === "Electron"
+                ? "SpeechRecognition nao esta disponivel neste Electron. Sera necessario fallback de STT em etapa futura."
+                : "Reconhecimento de voz nao disponivel neste ambiente."}
           </p>
-        ) : null}
 
-        {lastCommand ? (
-          <p className="voice-control__transcript">
-            Comando enviado: "{lastCommand}"
+          <p className="voice-control__environment">
+            Ambiente: {environmentLabel}
           </p>
-        ) : null}
 
-        {voiceError ? (
-          <p className="voice-control__error">{voiceError}</p>
-        ) : null}
-      </div>
+          {lastTranscript ? (
+            <p className="voice-control__transcript">
+              Reconhecido: "{lastTranscript}"
+            </p>
+          ) : null}
+
+          {lastCommand ? (
+            <p className="voice-control__transcript">
+              Comando enviado: "{lastCommand}"
+            </p>
+          ) : null}
+
+          {voiceError ? (
+            <p className="voice-control__error">{voiceError}</p>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
