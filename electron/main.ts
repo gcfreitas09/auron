@@ -1,7 +1,30 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, session } from "electron";
 import path from "node:path";
+import { listenForLocalVoiceCommand } from "./localSpeech";
 
 const DEV_SERVER_URL = "http://localhost:5173";
+
+app.commandLine.appendSwitch("enable-features", "WebSpeechAPI");
+
+function configureMediaPermissions() {
+  const allowedPermissions = new Set(["audioCapture", "media", "microphone"]);
+
+  session.defaultSession.setPermissionRequestHandler(
+    (_webContents, permission, callback) => {
+      callback(allowedPermissions.has(permission));
+    }
+  );
+
+  session.defaultSession.setPermissionCheckHandler(
+    (_webContents, permission) => allowedPermissions.has(permission)
+  );
+}
+
+function configureVoiceIpc() {
+  ipcMain.handle("auron:listen-local-command", () =>
+    listenForLocalVoiceCommand()
+  );
+}
 
 function createMainWindow() {
   const window = new BrowserWindow({
@@ -14,7 +37,8 @@ function createMainWindow() {
     title: "AURON",
     webPreferences: {
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      preload: path.join(__dirname, "preload.js")
     }
   });
 
@@ -26,6 +50,8 @@ function createMainWindow() {
 }
 
 app.whenReady().then(() => {
+  configureMediaPermissions();
+  configureVoiceIpc();
   createMainWindow();
 
   app.on("activate", () => {

@@ -1,0 +1,28 @@
+- main [ref=e3]:
+  - region "AURON interface" [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]: Neural Core Interface
+      - heading "AURON" [level=1] [ref=e12]
+      - paragraph [ref=e13]: Personal Intelligence System
+    - generic [ref=e28]:
+      - textbox "Digite um comando para o AURON" [ref=e30]:
+        - /placeholder: Digite um comando para o AURON...
+      - generic [ref=e31]:
+        - button "Ouvir comando" [ref=e32] [cursor=pointer]
+        - generic [ref=e33]:
+          - paragraph [ref=e34]: Pronto para ouvir.
+          - paragraph [ref=e35]: "Ambiente: Browser"
+      - generic [ref=e36]:
+        - generic [ref=e38]: AURON RESPONSE
+        - status [ref=e40]:
+          - paragraph [ref=e41]: Aguardando comando local.
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: Status
+          - strong [ref=e45]: IDLE
+        - generic "AURON state controls" [ref=e46]:
+          - button "idle" [ref=e47] [cursor=pointer]
+          - button "listening" [ref=e48] [cursor=pointer]
+          - button "thinking" [ref=e49] [cursor=pointer]
+          - button "speaking" [ref=e50] [cursor=pointer]
+          - button "error" [ref=e51] [cursor=pointer]

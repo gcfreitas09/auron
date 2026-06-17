@@ -388,3 +388,17 @@
     min-width: 210px;
   }
 }
+
+@media (max-height: 900px) {
+  .orb-scene {
+    width: clamp(220px, min(34vw, 32vh), 300px);
+    min-width: 220px;
+  }
+}
+
+@media (max-height: 820px) {
+  .orb-scene {
+    width: clamp(180px, min(28vw, 26vh), 240px);
+    min-width: 180px;
+  }
+}

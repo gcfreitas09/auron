@@ -2,5 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 electron_1.contextBridge.exposeInMainWorld("auron", {
-    version: "0.1.0"
+    version: "0.1.0",
+    listenForLocalVoiceCommand: () => electron_1.ipcRenderer.invoke("auron:listen-local-command")
 });

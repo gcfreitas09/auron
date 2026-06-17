@@ -28,7 +28,7 @@ function FloatingPanel({
             onClick={onClose}
             aria-label={`Fechar painel ${title}`}
           >
-            ×
+            &times;
           </button>
         ) : null}
       </div>
