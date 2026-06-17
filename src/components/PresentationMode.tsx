@@ -1,13 +1,19 @@
+import FloatingPanel from "./FloatingPanel";
+import MapPanel from "./MapPanel";
 import Orb from "./Orb";
 import SystemHeader from "./SystemHeader";
 import VoiceControl from "./VoiceControl";
+import type { MapViewport } from "../core/mapLocations";
 import ModeToggle from "./ModeToggle";
 import type { AuronState } from "../types/auron";
 
 type PresentationModeProps = {
   state: AuronState;
   responseMessage: string;
+  showMap: boolean;
+  mapViewport: MapViewport;
   onOpenDev: () => void;
+  onMapClose: () => void;
   onListeningStart: () => void;
   onListeningEnd: () => void;
   onRecognized: (command: string, transcript: string) => void | Promise<void>;
@@ -18,7 +24,10 @@ type PresentationModeProps = {
 function PresentationMode({
   state,
   responseMessage,
+  showMap,
+  mapViewport,
   onOpenDev,
+  onMapClose,
   onListeningStart,
   onListeningEnd,
   onRecognized,
@@ -44,6 +53,17 @@ function PresentationMode({
         <div className="presentation-response" role="status" aria-live="polite">
           <p>{responseMessage}</p>
         </div>
+
+        {showMap ? (
+          <FloatingPanel
+            title="MAP MODULE"
+            variant="accent"
+            onClose={onMapClose}
+            className="presentation-map-panel"
+          >
+            <MapPanel viewport={mapViewport} />
+          </FloatingPanel>
+        ) : null}
 
         <VoiceControl
           onListeningStart={onListeningStart}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import DevMode from "./components/DevMode";
 import PresentationMode from "./components/PresentationMode";
 import { routeCommand } from "./core/commandRouter";
+import { defaultMapLocation, toMapViewport, type MapViewport } from "./core/mapLocations";
 import type { AuronState } from "./types/auron";
 
 const helpCommands = [
@@ -11,6 +12,18 @@ const helpCommands = [
   "estado falando",
   "estado erro",
   "abrir mapa",
+  "abrir mapa de porto alegre",
+  "abrir brasil",
+  "abrir mapa do brasil",
+  "abrir mapa de sao paulo",
+  "abrir mapa do rio de janeiro",
+  "abrir mapa de nova york",
+  "abrir mapa de toquio",
+  "abrir mapa de londres",
+  "abrir mapa de paris",
+  "aproximar mapa",
+  "afastar mapa",
+  "centralizar mapa",
   "fechar mapa",
   "ajuda",
   "limpar"
@@ -25,6 +38,9 @@ function App() {
   );
   const [showHelp, setShowHelp] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [mapViewport, setMapViewport] = useState<MapViewport>(() =>
+    toMapViewport(defaultMapLocation)
+  );
   const transientTimerRef = useRef<number | null>(null);
   const transientStateRef = useRef<AuronState | null>(null);
 
@@ -99,10 +115,24 @@ function App() {
         break;
       case "open-map":
         setShowMap(true);
+        setMapViewport(result.location);
         setResponseMessage(result.message);
         break;
       case "close-map":
         setShowMap(false);
+        setResponseMessage(result.message);
+        break;
+      case "zoom-map":
+        setShowMap(true);
+        setMapViewport((currentViewport) => ({
+          ...currentViewport,
+          zoom: Math.max(2, Math.min(18, currentViewport.zoom + result.delta))
+        }));
+        setResponseMessage(result.message);
+        break;
+      case "center-map":
+        setShowMap(true);
+        setMapViewport(result.location);
         setResponseMessage(result.message);
         break;
       case "unknown":
@@ -165,7 +195,10 @@ function App() {
         <PresentationMode
           state={activeOrbState}
           responseMessage={responseMessage}
+          showMap={showMap}
+          mapViewport={mapViewport}
           onOpenDev={() => setMode("dev")}
+          onMapClose={() => setShowMap(false)}
           onListeningStart={handleVoiceListeningStart}
           onListeningEnd={handleVoiceListeningEnd}
           onRecognized={handleVoiceRecognized}
@@ -179,6 +212,7 @@ function App() {
           responseMessage={responseMessage}
           showHelp={showHelp}
           showMap={showMap}
+          mapViewport={mapViewport}
           helpCommands={helpCommands}
           onCloseDev={() => setMode("presentation")}
           onTextCommand={handleTextCommand}

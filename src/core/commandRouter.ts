@@ -1,4 +1,10 @@
 import type { AuronState } from "../types/auron";
+import {
+  defaultMapLocation,
+  findMapLocation,
+  toMapViewport,
+  type MapViewport
+} from "./mapLocations";
 
 export type CommandResult =
   | {
@@ -16,10 +22,21 @@ export type CommandResult =
     }
   | {
       type: "open-map";
+      location: MapViewport;
       message: string;
     }
   | {
       type: "close-map";
+      message: string;
+    }
+  | {
+      type: "zoom-map";
+      delta: number;
+      message: string;
+    }
+  | {
+      type: "center-map";
+      location: MapViewport;
       message: string;
     }
   | {
@@ -36,8 +53,25 @@ function normalizeCommand(command: string) {
     .replace(/\s+/g, " ");
 }
 
+function buildOpenMapResult(locationQuery: string) {
+  const location = findMapLocation(locationQuery);
+
+  if (!location) {
+    return null;
+  }
+
+  return {
+    type: "open-map" as const,
+    location: toMapViewport(location),
+    message: `Abrindo mapa de ${location.label}.`
+  };
+}
+
 export function routeCommand(command: string): CommandResult {
   const normalized = normalizeCommand(command);
+  const openMapMatch = normalized.match(
+    /^(?:abrir mapa de|abrir mapa do|mapa de|mapa do|abrir)\s+(.+)$/
+  );
 
   switch (normalized) {
     case "estado idle":
@@ -83,14 +117,41 @@ export function routeCommand(command: string): CommandResult {
     case "abrir mapa":
       return {
         type: "open-map",
-        message: "Modulo de mapa preparado."
+        location: toMapViewport(defaultMapLocation),
+        message: "Abrindo mapa de Porto Alegre."
       };
     case "fechar mapa":
       return {
         type: "close-map",
         message: "Mapa fechado."
       };
+    case "aproximar mapa":
+      return {
+        type: "zoom-map",
+        delta: 1,
+        message: "Aproximando mapa."
+      };
+    case "afastar mapa":
+      return {
+        type: "zoom-map",
+        delta: -1,
+        message: "Afastando mapa."
+      };
+    case "centralizar mapa":
+      return {
+        type: "center-map",
+        location: toMapViewport(defaultMapLocation),
+        message: "Mapa centralizado em Porto Alegre."
+      };
     default:
+      if (openMapMatch) {
+        const mapResult = buildOpenMapResult(openMapMatch[1]);
+
+        if (mapResult) {
+          return mapResult;
+        }
+      }
+
       return {
         type: "unknown",
         message: "Comando nao reconhecido."

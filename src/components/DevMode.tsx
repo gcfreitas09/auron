@@ -1,9 +1,11 @@
 import CommandInput from "./CommandInput";
 import FloatingPanel from "./FloatingPanel";
+import MapPanel from "./MapPanel";
 import ModeToggle from "./ModeToggle";
 import Orb from "./Orb";
 import SystemHeader from "./SystemHeader";
 import VoiceControl from "./VoiceControl";
+import type { MapViewport } from "../core/mapLocations";
 import { auronStates, type AuronState } from "../types/auron";
 
 type DevModeProps = {
@@ -12,6 +14,7 @@ type DevModeProps = {
   responseMessage: string;
   showHelp: boolean;
   showMap: boolean;
+  mapViewport: MapViewport;
   helpCommands: string[];
   onCloseDev: () => void;
   onTextCommand: (command: string) => void;
@@ -31,6 +34,7 @@ function DevMode({
   responseMessage,
   showHelp,
   showMap,
+  mapViewport,
   helpCommands,
   onCloseDev,
   onTextCommand,
@@ -93,7 +97,7 @@ function DevMode({
                 variant="accent"
                 onClose={onMapClose}
               >
-                <p>Map system reserved for next stage.</p>
+                <MapPanel viewport={mapViewport} />
               </FloatingPanel>
             ) : null}
           </div>
