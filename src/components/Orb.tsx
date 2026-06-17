@@ -1,6 +1,12 @@
-function Orb() {
+import type { AuronState } from "../types/auron";
+
+type OrbProps = {
+  state: AuronState;
+};
+
+function Orb({ state }: OrbProps) {
   return (
-    <div className="orb-scene" aria-hidden="true">
+    <div className={`orb-scene orb-scene--${state}`} aria-hidden="true">
       <div className="orb-halo orb-halo--outer" />
       <div className="orb-halo orb-halo--mid" />
       <div className="orb-core">
