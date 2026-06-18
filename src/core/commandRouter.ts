@@ -2,8 +2,8 @@ import type { AuronState } from "../types/auron";
 import {
   defaultMapLocation,
   findMapLocation,
-  toMapViewport,
-  type MapViewport
+  homeMapLocation,
+  type MapLocation
 } from "./mapLocations";
 
 export type CommandResult =
@@ -22,7 +22,7 @@ export type CommandResult =
     }
   | {
       type: "open-map";
-      location: MapViewport;
+      location: MapLocation;
       message: string;
     }
   | {
@@ -30,13 +30,9 @@ export type CommandResult =
       message: string;
     }
   | {
-      type: "zoom-map";
+      type: "adjust-map";
+      action: "zoom" | "rotate" | "tilt";
       delta: number;
-      message: string;
-    }
-  | {
-      type: "center-map";
-      location: MapViewport;
       message: string;
     }
   | {
@@ -62,7 +58,7 @@ function buildOpenMapResult(locationQuery: string) {
 
   return {
     type: "open-map" as const,
-    location: toMapViewport(location),
+    location,
     message: `Abrindo mapa de ${location.label}.`
   };
 }
@@ -70,7 +66,7 @@ function buildOpenMapResult(locationQuery: string) {
 export function routeCommand(command: string): CommandResult {
   const normalized = normalizeCommand(command);
   const openMapMatch = normalized.match(
-    /^(?:abrir mapa de|abrir mapa do|mapa de|mapa do|abrir)\s+(.+)$/
+    /^(?:abrir mapa de|abrir mapa do|abrir mapa em|mapa de|mapa do|abrir)\s+(.+)$/
   );
 
   switch (normalized) {
@@ -117,8 +113,17 @@ export function routeCommand(command: string): CommandResult {
     case "abrir mapa":
       return {
         type: "open-map",
-        location: toMapViewport(defaultMapLocation),
-        message: "Abrindo mapa de Porto Alegre."
+        location: defaultMapLocation,
+        message: "Abrindo Globe Mode."
+      };
+    case "abrir globo":
+    case "visao global":
+    case "recentralizar globo":
+    case "resetar globo":
+      return {
+        type: "open-map",
+        location: defaultMapLocation,
+        message: "Recentralizando globo."
       };
     case "fechar mapa":
       return {
@@ -127,20 +132,36 @@ export function routeCommand(command: string): CommandResult {
       };
     case "aproximar mapa":
       return {
-        type: "zoom-map",
+        type: "adjust-map",
+        action: "zoom",
         delta: 1,
         message: "Aproximando mapa."
       };
     case "afastar mapa":
       return {
-        type: "zoom-map",
+        type: "adjust-map",
+        action: "zoom",
         delta: -1,
         message: "Afastando mapa."
       };
+    case "girar mapa":
+      return {
+        type: "adjust-map",
+        action: "rotate",
+        delta: 24,
+        message: "Girando mapa."
+      };
+    case "inclinar mapa":
+      return {
+        type: "adjust-map",
+        action: "tilt",
+        delta: 8,
+        message: "Inclinando mapa."
+      };
     case "centralizar mapa":
       return {
-        type: "center-map",
-        location: toMapViewport(defaultMapLocation),
+        type: "open-map",
+        location: homeMapLocation,
         message: "Mapa centralizado em Porto Alegre."
       };
     default:

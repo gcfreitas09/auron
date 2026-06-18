@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "cesium/Build/Cesium/Widgets/widgets.css";
 import "leaflet/dist/leaflet.css";
 import App from "./App";
+import "./styles/globe-panel.css";
 import "./styles/global.css";
 import "./styles/map-panel.css";
 import "./styles/orb.css";

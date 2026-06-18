@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import DevMode from "./components/DevMode";
 import PresentationMode from "./components/PresentationMode";
 import { routeCommand } from "./core/commandRouter";
-import { defaultMapLocation, toMapViewport, type MapViewport } from "./core/mapLocations";
+import { defaultMapLocation, type MapLocation, type MapRuntimeCommand } from "./core/mapLocations";
 import type { AuronState } from "./types/auron";
 
 const helpCommands = [
@@ -12,6 +12,7 @@ const helpCommands = [
   "estado falando",
   "estado erro",
   "abrir mapa",
+  "abrir globo",
   "abrir mapa de porto alegre",
   "abrir brasil",
   "abrir mapa do brasil",
@@ -23,6 +24,11 @@ const helpCommands = [
   "abrir mapa de paris",
   "aproximar mapa",
   "afastar mapa",
+  "girar mapa",
+  "inclinar mapa",
+  "visao global",
+  "recentralizar globo",
+  "resetar globo",
   "centralizar mapa",
   "fechar mapa",
   "ajuda",
@@ -38,17 +44,33 @@ function App() {
   );
   const [showHelp, setShowHelp] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [mapViewport, setMapViewport] = useState<MapViewport>(() =>
-    toMapViewport(defaultMapLocation)
-  );
+  const [mapLocation, setMapLocation] = useState<MapLocation>(defaultMapLocation);
+  const [mapCommand, setMapCommand] = useState<MapRuntimeCommand | null>({
+    nonce: 1,
+    type: "fly-to",
+    location: defaultMapLocation
+  });
   const transientTimerRef = useRef<number | null>(null);
   const transientStateRef = useRef<AuronState | null>(null);
+  const mapCommandNonceRef = useRef(1);
 
   const activeOrbState = transientState ?? state;
 
   useEffect(() => {
     transientStateRef.current = transientState;
   }, [transientState]);
+
+  useEffect(() => {
+    const className = "app--globe-active";
+
+    document.body.classList.toggle(className, showMap);
+    document.documentElement.classList.toggle(className, showMap);
+
+    return () => {
+      document.body.classList.remove(className);
+      document.documentElement.classList.remove(className);
+    };
+  }, [showMap]);
 
   function clearTransientTimer() {
     if (transientTimerRef.current !== null) {
@@ -69,6 +91,11 @@ function App() {
   function stopTransientState() {
     clearTransientTimer();
     setTransientState(null);
+  }
+
+  function nextMapNonce() {
+    mapCommandNonceRef.current += 1;
+    return mapCommandNonceRef.current;
   }
 
   async function speakMessage(message: string) {
@@ -115,24 +142,30 @@ function App() {
         break;
       case "open-map":
         setShowMap(true);
-        setMapViewport(result.location);
+        setMapLocation(result.location);
+        setMapCommand({
+          nonce: nextMapNonce(),
+          type: "fly-to",
+          location: result.location
+        });
         setResponseMessage(result.message);
         break;
       case "close-map":
         setShowMap(false);
         setResponseMessage(result.message);
         break;
-      case "zoom-map":
+      case "adjust-map":
         setShowMap(true);
-        setMapViewport((currentViewport) => ({
-          ...currentViewport,
-          zoom: Math.max(2, Math.min(18, currentViewport.zoom + result.delta))
-        }));
-        setResponseMessage(result.message);
-        break;
-      case "center-map":
-        setShowMap(true);
-        setMapViewport(result.location);
+        setMapCommand({
+          nonce: nextMapNonce(),
+          type:
+            result.action === "zoom"
+              ? "zoom"
+              : result.action === "rotate"
+                ? "rotate"
+                : "tilt",
+          delta: result.delta
+        });
         setResponseMessage(result.message);
         break;
       case "unknown":
@@ -183,7 +216,7 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell${showMap ? " app--globe-active" : ""}`}>
       <div className="app-background" aria-hidden="true">
         <div className="app-gradient app-gradient-primary" />
         <div className="app-gradient app-gradient-secondary" />
@@ -196,9 +229,11 @@ function App() {
           state={activeOrbState}
           responseMessage={responseMessage}
           showMap={showMap}
-          mapViewport={mapViewport}
+          mapLocation={mapLocation}
+          mapCommand={mapCommand}
           onOpenDev={() => setMode("dev")}
           onMapClose={() => setShowMap(false)}
+          onGlobeStatusChange={setResponseMessage}
           onListeningStart={handleVoiceListeningStart}
           onListeningEnd={handleVoiceListeningEnd}
           onRecognized={handleVoiceRecognized}
@@ -212,10 +247,12 @@ function App() {
           responseMessage={responseMessage}
           showHelp={showHelp}
           showMap={showMap}
-          mapViewport={mapViewport}
+          mapLocation={mapLocation}
+          mapCommand={mapCommand}
           helpCommands={helpCommands}
           onCloseDev={() => setMode("presentation")}
           onTextCommand={handleTextCommand}
+          onGlobeStatusChange={setResponseMessage}
           onListeningStart={handleVoiceListeningStart}
           onListeningEnd={handleVoiceListeningEnd}
           onRecognized={handleVoiceRecognized}

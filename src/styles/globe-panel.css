@@ -1,0 +1,185 @@
+.globe-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 30px;
+  background: #02050d;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+  overflow: hidden;
+}
+
+.globe-panel--presentation {
+  border-radius: 32px;
+}
+
+.globe-panel__viewport {
+  position: absolute;
+  inset: 0;
+  min-height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(26, 51, 122, 0.42), transparent 30%),
+    linear-gradient(180deg, #02040b 0%, #040916 100%);
+}
+
+.globe-panel__viewer,
+.globe-panel__fallback {
+  position: absolute;
+  inset: 0;
+}
+
+.globe-panel__viewer canvas {
+  outline: none;
+}
+
+.globe-panel__meta {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  width: fit-content;
+  max-width: calc(100% - 72px);
+  padding: 10px 14px;
+  border: 1px solid rgba(112, 170, 255, 0.16);
+  border-radius: 18px;
+  background: rgba(5, 10, 24, 0.64);
+  backdrop-filter: blur(18px);
+}
+
+.globe-panel__eyebrow {
+  display: block;
+  font-size: 0.66rem;
+  letter-spacing: 0.16rem;
+  text-transform: uppercase;
+  color: rgba(148, 196, 255, 0.7);
+}
+
+.globe-panel__meta strong {
+  display: block;
+  margin-top: 4px;
+  color: #f5f8ff;
+  font-size: 1.08rem;
+}
+
+.globe-panel__meta p {
+  margin: 4px 0 0;
+  color: rgba(179, 205, 255, 0.64);
+  font-size: 0.8rem;
+}
+
+.globe-panel__notice {
+  position: absolute;
+  top: 88px;
+  left: 18px;
+  z-index: 2;
+  max-width: min(420px, calc(100% - 36px));
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 176, 176, 0.16);
+  border-radius: 16px;
+  background: rgba(55, 14, 23, 0.56);
+  color: rgba(255, 218, 218, 0.92);
+  font-size: 0.92rem;
+}
+
+.globe-panel__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(121, 162, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(7, 15, 34, 0.78);
+  color: rgba(236, 242, 255, 0.88);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.globe-panel__close:hover {
+  border-color: rgba(124, 214, 255, 0.42);
+  background: rgba(16, 31, 64, 0.92);
+  transform: translateY(-1px);
+}
+
+.globe-panel__credits {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(4, 10, 22, 0.72);
+  color: rgba(200, 220, 255, 0.78);
+  font-size: 0.72rem;
+  backdrop-filter: blur(16px);
+}
+
+.globe-panel__credits a,
+.globe-panel__credits .cesium-credit-textContainer {
+  color: #9fd9ff;
+}
+
+.globe-panel__credits .cesium-widget-credits,
+.globe-panel__credits .cesium-credit-logoContainer,
+.globe-panel__credits .cesium-credit-textContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.globe-panel__credits img {
+  max-height: 16px;
+}
+
+.globe-panel .cesium-widget,
+.globe-panel .cesium-widget canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.globe-panel .cesium-viewer,
+.globe-panel .cesium-viewer-cesiumWidgetContainer,
+.globe-panel .cesium-viewer-cesiumWidgetContainer .cesium-widget {
+  width: 100%;
+  height: 100%;
+}
+
+.globe-panel .cesium-viewer-bottom {
+  display: none;
+}
+
+.globe-panel--dev {
+  border-radius: 24px;
+}
+
+@media (max-width: 640px) {
+  .globe-panel {
+    border-radius: 22px;
+  }
+
+  .globe-panel__meta {
+    max-width: calc(100% - 58px);
+  }
+
+  .globe-panel__viewport {
+    border-radius: 18px;
+  }
+
+  .globe-panel__credits {
+    left: 14px;
+    right: auto;
+    bottom: 14px;
+    max-width: calc(100% - 28px);
+    border-radius: 14px;
+  }
+}

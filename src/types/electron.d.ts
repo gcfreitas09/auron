@@ -14,8 +14,11 @@ type AuronLocalVoiceResult =
     };
 
 interface Window {
+  CESIUM_BASE_URL?: string;
   auron?: {
     version: string;
     listenForLocalVoiceCommand?: () => Promise<AuronLocalVoiceResult>;
   };
 }
+
+declare const CESIUM_BASE_URL: string;

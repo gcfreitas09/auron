@@ -17,6 +17,11 @@ body,
   margin: 0;
 }
 
+html.app--globe-active,
+body.app--globe-active {
+  overflow: hidden;
+}
+
 body {
   overflow: hidden;
   background:
@@ -44,6 +49,10 @@ select {
   padding: 16px;
 }
 
+.app-shell.app--globe-active {
+  padding: 0;
+}
+
 .atlas-mode {
   position: relative;
   width: min(92vw, 1080px);
@@ -61,6 +70,13 @@ select {
   overflow: hidden;
 }
 
+.atlas-mode--presentation.atlas-mode--map-active {
+  width: 100vw;
+  max-width: none;
+  justify-content: flex-start;
+  padding: 0;
+}
+
 .atlas-mode--dev {
   justify-content: flex-start;
   overflow-y: auto;
@@ -68,6 +84,13 @@ select {
   padding-top: 72px;
   padding-bottom: 28px;
   scrollbar-gutter: stable;
+}
+
+.atlas-mode--dev.atlas-mode--map-active {
+  width: 100vw;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
 }
 
 .app-background,
@@ -93,6 +116,14 @@ select {
 
 .app-gradient-secondary {
   background: radial-gradient(circle at 50% 72%, rgba(72, 246, 210, 0.14), transparent 30%);
+}
+
+.app--globe-active .app-gradient-primary {
+  background: radial-gradient(circle at 64% 48%, rgba(47, 112, 255, 0.28), transparent 42%);
+}
+
+.app--globe-active .app-gradient-secondary {
+  background: radial-gradient(circle at 24% 82%, rgba(60, 217, 255, 0.12), transparent 24%);
 }
 
 .app-grid {
@@ -222,8 +253,99 @@ select {
   line-height: 1.5;
 }
 
-.presentation-map-panel {
-  width: min(100%, 760px);
+.presentation-globe-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+}
+
+.presentation-globe-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.presentation-hud {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 3;
+  width: min(320px, calc(100vw - 40px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(112, 165, 255, 0.16);
+  border-radius: 24px;
+  background: rgba(5, 10, 23, 0.54);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(211, 228, 255, 0.04);
+  backdrop-filter: blur(20px);
+}
+
+.presentation-hud__brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.presentation-hud__brand span {
+  font-size: 0.8rem;
+  letter-spacing: 0.32rem;
+  text-transform: uppercase;
+  color: rgba(164, 198, 255, 0.72);
+}
+
+.presentation-hud__brand strong {
+  font-size: 0.82rem;
+  letter-spacing: 0.16rem;
+  text-transform: uppercase;
+  color: #f6f8ff;
+}
+
+.presentation-hud__response {
+  padding: 12px 14px;
+  border: 1px solid rgba(104, 138, 218, 0.14);
+  border-radius: 16px;
+  background: rgba(8, 13, 29, 0.58);
+}
+
+.presentation-hud__response p {
+  margin: 0;
+  color: rgba(227, 237, 255, 0.82);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.presentation-hud .voice-control {
+  width: auto;
+  align-items: flex-start;
+}
+
+.presentation-hud .voice-control__button {
+  padding-inline: 18px;
+}
+
+.atlas-core {
+  display: grid;
+  place-items: center;
+}
+
+.atlas-core--center {
+  width: 100%;
+}
+
+.atlas-core--mini {
+  width: fit-content;
+}
+
+.atlas-core--mini .orb-scene {
+  width: clamp(120px, min(12vw, 18vh), 168px);
+  min-width: 120px;
+  animation-duration: 6s;
 }
 
 .auron-orb-zone {
@@ -277,6 +399,74 @@ select {
   overflow: visible;
   padding-right: 0;
   flex: 0 0 auto;
+}
+
+.dev-globe-shell {
+  width: 100%;
+}
+
+.dev-globe-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+}
+
+.dev-globe-stage {
+  position: absolute;
+  inset: 0;
+  padding: 14px;
+}
+
+.dev-overlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  bottom: 14px;
+  z-index: 4;
+  width: min(360px, calc(100vw - 28px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(111, 165, 255, 0.16);
+  border-radius: 24px;
+  background: rgba(5, 11, 25, 0.68);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(214, 228, 255, 0.04);
+  backdrop-filter: blur(18px);
+  overflow-y: auto;
+}
+
+.dev-overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 36px;
+  color: #f5f8ff;
+}
+
+.dev-overlay__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22rem;
+  text-transform: uppercase;
+  color: rgba(159, 190, 255, 0.72);
+}
+
+.dev-toolbar--overlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: auto;
+}
+
+.dev-core-hud {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 4;
 }
 
 .command-input {
@@ -803,6 +993,47 @@ select {
 
   .presentation-response {
     padding: 12px 14px;
+  }
+
+  .presentation-globe-layout {
+    min-height: 100dvh;
+  }
+
+  .presentation-globe-stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .presentation-hud {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    padding: 12px;
+  }
+
+  .presentation-hud__brand {
+    padding: 0;
+  }
+
+  .dev-globe-stage {
+    padding: 0;
+  }
+
+  .dev-overlay {
+    top: auto;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
+    max-height: 46vh;
+    border-radius: 20px;
+  }
+
+  .dev-core-hud {
+    left: 12px;
+    top: 12px;
+    bottom: auto;
   }
 }
 
